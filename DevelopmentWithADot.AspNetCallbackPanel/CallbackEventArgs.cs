@@ -3,7 +3,7 @@
 namespace DevelopmentWithADot.AspNetCallbackPanel
 {
 	[Serializable]
-	public class CallbackEventArgs : EventArgs
+	public sealed class CallbackEventArgs : EventArgs
 	{
 		public CallbackEventArgs(String parameter)
 		{
