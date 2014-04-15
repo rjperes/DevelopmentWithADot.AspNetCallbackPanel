@@ -12,11 +12,15 @@ namespace DevelopmentWithADot.AspNetCallbackPanel
 		public CallbackPanel()
 		{
 			this.OnAfterCallback = String.Empty;
+			this.OnBeforeCallback = String.Empty;
 			this.OnCallbackError = String.Empty;
 			this.SendAllData = true;
 		}
 
 		public event EventHandler<CallbackEventArgs> Callback;
+
+		[DefaultValue("")]
+		public String OnBeforeCallback { get; set; }
 
 		[DefaultValue("")]
 		public String OnAfterCallback { get; set; }
@@ -31,7 +35,7 @@ namespace DevelopmentWithADot.AspNetCallbackPanel
 		{
 			var sm = ScriptManager.GetCurrent(this.Page);
 			var reference = this.Page.ClientScript.GetCallbackEventReference(this, "arg", String.Format("function(result, context){{ document.getElementById('{0}').innerHTML = result; {1} }}", this.ClientID, (String.IsNullOrWhiteSpace(this.OnAfterCallback) == false) ? String.Concat(this.OnAfterCallback, "(result, context);") : String.Empty), "context", String.Format("function(error, context){{ {0} }}", ((String.IsNullOrWhiteSpace(this.OnCallbackError) == false) ? String.Concat(this.OnCallbackError, "(error, context)") : String.Empty)), true);
-			var script = String.Concat("\ndocument.getElementById('", this.ClientID, "').callback = function(arg, context){", ((this.SendAllData == true) ? "__theFormPostCollection.length = 0; __theFormPostData = '';  WebForm_InitCallback(); " : "__theFormPostCollection.length = 0; __theFormPostData = '';  WebForm_InitCallback(); for (var i = 0; i < __theFormPostCollection.length; ++i) { if (__theFormPostCollection[i].name.indexOf('" + this.UniqueID + "$') == -1) { __theFormPostCollection[i].value = '' }  }; "), reference, ";};\n");
+			var script = String.Concat("\ndocument.getElementById('", this.ClientID, "').callback = function(arg, context){", ((this.SendAllData == true) ? "__theFormPostCollection.length = 0; __theFormPostData = '';  WebForm_InitCallback(); " : "__theFormPostCollection.length = 0; __theFormPostData = '';  WebForm_InitCallback(); for (var i = 0; i < __theFormPostCollection.length; ++i) { if (__theFormPostCollection[i].name.indexOf('" + this.UniqueID + "$') == -1) { __theFormPostCollection[i].value = '' } }; "), (String.IsNullOrWhiteSpace(this.OnBeforeCallback) == true ? String.Empty : String.Concat("if (", this.OnBeforeCallback, "(arg, context) === false) return; ")), reference, ";};\n");
 
 			if (sm != null)
 			{

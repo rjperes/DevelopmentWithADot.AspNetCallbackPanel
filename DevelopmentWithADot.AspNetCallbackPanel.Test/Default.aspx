@@ -17,6 +17,11 @@
 			debugger;
 		}
 
+		function onBeforeCallback(arg, context)
+		{
+			debugger;
+		}
+
 		function onAfterCallback(result, context)
 		{
 			debugger;
@@ -28,7 +33,7 @@
 	<form runat="server">
 	<div>
 		<asp:ScriptManager runat="server"></asp:ScriptManager>
-		<web:CallbackPanel runat="server" ID="callback" SendAllData="false" OnAfterCallback="onAfterCallback" OnCallbackError="onCallbackError" OnCallback="OnCallback">
+		<web:CallbackPanel runat="server" ID="callback" SendAllData="false" OnBeforeCallback="onBeforeCallback" OnAfterCallback="onAfterCallback" OnCallbackError="onCallbackError" OnCallback="OnCallback">
 			<asp:Label runat="server" ID="time"></asp:Label>
 			<asp:TextBox runat="server" ID="text"></asp:TextBox>
 			<asp:Button runat="server" ID="button" Text="Button"/>
